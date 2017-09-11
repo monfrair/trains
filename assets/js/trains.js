@@ -21,9 +21,6 @@ $(document).ready(function () {
     var frequency = 0;
     var nextArrival = 0;
     var nextArrivalcalculated = "";
-    var minutesAway = 0;
-    
-    
 
 
     //button to add trains to scheduler
@@ -35,24 +32,42 @@ $(document).ready(function () {
         trainTime = $("#trainTime").val().trim();
         frequency = $("#frequency").val().trim();
         
+        
+        
+        //firstTime (pushed back 1 year to make sure it comes before current time)
+        var firstTimeConverted = moment(trainTime, "hh:mm").subtract(1, "years");
+        console.log(firstTimeConverted);
+        
         //get the current time
         var currentTime = moment();
         
-        var nextArrival = moment(trainTime).unix();
-        frequency = $("#frequency").val().trim();
+        //calculate the difference between the times
+        var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+        console.log("Difference in times: " + diffTime);
+        
+        //Time apart (get the remainder)
+        var timeRemainder = diffTime % frequency;
+        console.log(timeRemainder);
+        
+        // Calcualte minutes until next train
+        var minutesAway = frequency - timeRemainder;
+        console.log("Minutes until next train: " + minutesAway);
+        
+        //calculate when the next train comes
+        var nextArrival = moment().add(minutesAway, "minutes");
+        console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
         
         
-        
-        
-        
+        //push the data into the DB
         database.ref().push({
             trainName: trainName,
             destination: destination,
             trainTime: trainTime,
-            frequncy: frequency
-        })
-console.log(unixDate);
-    })
+            frequncy: frequency,
+            nextArrival: nextArrival,
+            minutesAway: minutesAway
+        });
+
 
     database.ref().on("child_added", function (snapshot) {
         // storing the snapshot.val() in a variable for convenience
@@ -62,19 +77,23 @@ console.log(unixDate);
         console.log(sv.trainName);
         console.log(sv.destination);
         console.log(sv.trainTime);
-        console.log(sv.frequncy);
+        console.log(sv.frequency);
         
         
-        
+        //send data out to the table
         var tableRow = $("<tr>");
         var column1 = $("<td>").text(sv.trainName);
         var column2 = $("<td>").text(sv.destination);
-        var column3 = $("<td>").text(moment.unix(sv.trainTime).format("hh:mm"));
-        var column4 = $("<td>").text("");
-        var column5 = $("<td>").text(sv.monthlyRate);
-        var column6 = $("<td>").text("");
+        var column3 = $("<td>").text(sv.frequncy);
+        var column4 = $("<td>").text(sv.nextArrival);
+        var column5 = $("<td>").text(sv.minutesAway);
         
-        tableRow.append(column1).append(column2).append(column3).append(column4).append(column5).append(column6);
+//        var column3 = $("<td>").text(moment.unix(sv.trainTime).format("hh:mm"));
+//        var column4 = $("<td>").text("");
+//       
+//        var column6 = $("<td>").text("");
+        
+        tableRow.append(column1).append(column2).append(column3).append(column4).append(column5);
         
         
         
