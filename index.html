@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <title>Catch that Train</title>
+</head>
+
+<body>
+
+    <div class="jumbotron text-center">
+        <h1 class="display-3">Train Scheduler</h1>
+        <p class="lead">Add your train to the scheduler</p>
+        <hr class="my-4">
+
+
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        Current Train Schedule
+                    </div>
+                    <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <td>Train Name</td>
+                            <td>Destination</td>
+                            <td>Frequency (min)</td>
+                            <td>Next Arrival</td>
+                            <td>Minutes Away</td>
+                            </tr>
+                            
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                        
+                    </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        Add Train
+
+                    </div>
+
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="trainName">Train Name</label>
+                                <input type="text" class="form-control" id="trainName" aria-describedby="emailHelp" placeholder="Enter Train Name">
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="role">Destination</label>
+                                <input type="text" class="form-control" id="destination" aria-describedby="emailHelp" placeholder="Enter Destination">
+
+                            </div>
+                            <div class="form-group">
+                                <label for="trainTime">First Train Time (HH:mm military time):</label>
+                                <input type="text" class="form-control" id="trainTime" aria-describedby="emailHelp" placeholder="Enter Military Time">
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="monthlyRate">Frequency</label>
+                                <input type="number" class="form-control" id="frequency" aria-describedby="emailHelp" placeholder="Enter Frequency">
+
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary" id="addTrain">Add Train</button>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+    
+    <script src="js/trains.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>
