@@ -19,14 +19,14 @@ $(document).ready(function () {
     var destination = "";
     var trainTime = "";
     var frequency = "";
-    var nextArrival = "";
     var timeRemainder = "";
     var minutesAway = "";
     var diffTime = "";
-    var nextArrivalcalculated = "";
+    var nextTrain = "";
     var firstTimeConverted = "";
     var currentTime = "";
-    
+    var nextTrainCalculated = "";
+
     //button to add trains to scheduler
     $("#addTrain").on("click", function () {
         //grab the values of the entered data and store in variable
@@ -39,27 +39,29 @@ $(document).ready(function () {
 
 
         //firstTime (pushed back 1 year to make sure it comes before current time)
-        var firstTimeConverted = moment(trainTime, "hh:mm").subtract(1, "years");
+        firstTimeConverted = moment(trainTime, "hh:mm").subtract(1, "years");
         console.log(firstTimeConverted);
 
         //get the current time
-        var currentTime = moment();
+        currentTime = moment();
 
         //calculate the difference between the times
-        var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+        diffTime = moment().diff(moment(firstTimeConverted), "minutes");
         console.log("Difference in times: " + diffTime);
 
         //Time apart (get the remainder)
-        var timeRemainder = diffTime % frequency;
+        timeRemainder = diffTime % frequency;
         console.log(timeRemainder);
 
         // Calcualte minutes until next train
-        var minutesAway = frequency - timeRemainder;
+        minutesAway = frequency - timeRemainder;
         console.log("Minutes until next train: " + minutesAway);
 
         //calculate when the next train comes
-        var nextArrivalcalculated = moment().add(minutesAway, "minutes");
-        console.log("ARRIVAL TIME: " + moment(nextArrivalcalculated).format("hh:mm"));
+        nextTrain = moment().add(minutesAway, "minutes");
+        console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+        
+        nextTrainCalculated = moment(nextTrain).format("hh:mm");
 
 
         //push the data into the DB
@@ -68,7 +70,7 @@ $(document).ready(function () {
             destination: destination,
             trainTime: trainTime,
             frequency: frequency,
-            nextArrivalcalculated: nextArrival,
+            nextTrain: nextTrain,
             minutesAway: minutesAway
         });
 
@@ -78,10 +80,12 @@ $(document).ready(function () {
             var sv = snapshot.val();
 
             // Console.loging the last user's data
-            console.log(sv.trainName);
-            console.log(sv.destination);
-            console.log(sv.trainTime);
-            console.log(sv.frequency);
+            console.log(sv.trainName) + "train name";
+            console.log(sv.destination) + "destination";
+            console.log(sv.trainTime) + "train time";
+            console.log(sv.frequency) + "frequency";
+        console.log(moment(nextTrain).format("hh:mm"));
+        console.log(sv.minutesAway) + "minutes away";
 
 
             //send data out to the table
@@ -89,15 +93,12 @@ $(document).ready(function () {
             var column1 = $("<td>").text(sv.trainName);
             var column2 = $("<td>").text(sv.destination);
             var column3 = $("<td>").text(sv.frequency);
-//        var column4 = $("<td>").text(moment.unix(sv.nextArrival).format("hh:mm"));
+            //        var column4 = $("<td>").text(moment.unix(sv.nextArrival).format("hh:mm"));
             //                    
-            var column4 = $("<td>").text(sv.trainTime);
-//            var column5 = $("<td>").text(sv.minutesAway);
+            var column4 = $("<td>").text(sv.nextTrain);
+            var column5 = $("<td>").text(sv.minutesAway);
 
-                    var column5 = $("<td>").text(moment.unix(sv.minutesAway).format("hh:mm"));
-            //        var column4 = $("<td>").text("");
-            //       
-            //        var column6 = $("<td>").text("");
+            //            var column5 = $("<td>").text(moment.unix(sv.minutesAway).format("hh:mm"));
 
             tableRow.append(column1).append(column2).append(column3).append(column4).append(column5);
 
