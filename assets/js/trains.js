@@ -19,13 +19,10 @@ $(document).ready(function () {
     var destination = "";
     var trainTime = "";
     var frequency = "";
-    var timeRemainder = "";
-    var minutesAway = "";
-    var diffTime = "";
     var nextTrain = "";
-    var firstTimeConverted = "";
     var currentTime = "";
-    var nextTrainCalculated = "";
+
+    var nextArrival = "";
 
     //button to add trains to scheduler
     $("#addTrain").on("click", function () {
@@ -33,35 +30,37 @@ $(document).ready(function () {
         event.preventDefault();
         trainName = $("#trainName").val().trim();
         destination = $("#destination").val().trim();
-        trainTime = $("#trainTime").val().trim();
+        trainTime = moment($("#trainTime").val().trim(), "HH:mm").format("X");
         frequency = $("#frequency").val().trim();
 
 
 
-        //firstTime (pushed back 1 year to make sure it comes before current time)
-        firstTimeConverted = moment(trainTime, "hh:mm").subtract(1, "years");
-        console.log(firstTimeConverted);
-
-        //get the current time
-        currentTime = moment();
-
-        //calculate the difference between the times
-        diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-        console.log("Difference in times: " + diffTime);
-
-        //Time apart (get the remainder)
-        timeRemainder = diffTime % frequency;
-        console.log(timeRemainder);
-
-        // Calcualte minutes until next train
-        minutesAway = frequency - timeRemainder;
-        console.log("Minutes until next train: " + minutesAway);
-
-        //calculate when the next train comes
-        nextTrain = moment().add(minutesAway, "minutes");
-        console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-        
-        nextTrainCalculated = moment(nextTrain).format("hh:mm");
+        //        //firstTime (pushed back 1 year to make sure it comes before current time)
+        //        firstTimeConverted = moment.unix(trainTime).subtract(1, "years");
+        //        console.log(firstTimeConverted);
+        //
+        //        //get the current time
+        //        currentTime = moment();
+        //        
+        var unixTime = moment().format("X");
+        //
+        //        //calculate the difference between the times
+        //        diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+        //        console.log("Difference in times: " + diffTime);
+        //
+        //        //Time apart (get the remainder)
+        //        timeRemainder = diffTime % frequency;
+        //        console.log(timeRemainder);
+        //
+        //        // Calcualte minutes until next train
+        //        minutesAway = frequency - timeRemainder;
+        //        console.log("Minutes until next train: " + minutesAway);
+        //
+        //        //calculate when the next train comes
+        //        nextArrival = moment().add(minutesAway, "minutes");
+        //        console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
+        //        
+        //        nextTrainCalculated = moment(nextArrival).format("hh:mm");
 
 
         //push the data into the DB
@@ -70,42 +69,70 @@ $(document).ready(function () {
             destination: destination,
             trainTime: trainTime,
             frequency: frequency,
-            nextTrain: nextTrain,
-            minutesAway: minutesAway
+            unixTime: unixTime
         });
 
     });
-    database.ref().on("child_added", function (snapshot) {
+    database.ref().on("value", function (snapshot) {
             // storing the snapshot.val() in a variable for convenience
-            var sv = snapshot.val();
+            $("tbody").empty();
 
-            // Console.loging the last user's data
-            console.log(sv.trainName) + "train name";
-            console.log(sv.destination) + "destination";
-            console.log(sv.trainTime) + "train time";
-            console.log(sv.frequency) + "frequency";
-        console.log(moment(nextTrain).format("hh:mm"));
-        console.log(sv.minutesAway) + "minutes away";
+            snapshot.forEach(function (childSnapshot) {
+                var sv = childSnapshot.val();
+                
+                var trainClass = sv.key;
+                var firstTimeConverted = moment.unix(sv.trainTime);
+                var diffTime = moment().diff(moment(firstTimeConverted, "HH:mm"), "minutes");
+                var timeRemainder = diffTime % frequency;
+                var  minutesAway = frequency - timeRemainder;
+             
+                if (diffTime >= 0) {
+                    nextTrain = null;
+                    nextTrain =  moment().add(minutesAway, "minutes").format("hh:mm A");
+                    console.log(nextTrain) + "next train";
+                } else {
+                    nextTrain = null;
+                    nextTrain = firstTimeConverted.format("hh:mm A");
+                    diffTime = Math.abs(diffTime -1);
+                    console.log(nextTrain) + "next train";
+                }
+            
+                 nextArrival = moment().add(minutesAway, "minutes");
+                
+                
+                
+
+                // Console.loging the last user's data
+                console.log(sv.trainName) + "train name";
+                console.log(sv.destination) + "destination";
+                console.log(sv.trainTime) + "train time";
+                console.log(sv.frequency) + "frequency";
+                console.log(nextTrain) + "next train";
+                console.log(moment(nextArrival).format("hh:mm"));
+//                console.log(moment(nextTrain).format("hh:mm"));
+//                console.log(sv.minutesAway);
 
 
-            //send data out to the table
-            var tableRow = $("<tr>");
-            var column1 = $("<td>").text(sv.trainName);
-            var column2 = $("<td>").text(sv.destination);
-            var column3 = $("<td>").text(sv.frequency);
-            //        var column4 = $("<td>").text(moment.unix(sv.nextArrival).format("hh:mm"));
-            //                    
-            var column4 = $("<td>").text(sv.nextTrain);
-            var column5 = $("<td>").text(sv.minutesAway);
+                //send data out to the table
+                var tableRow = $("<tr>");
+                var column1 = $("<td>").text(sv.trainName);
+                var column2 = $("<td>").text(sv.destination);
+                var column3 = $("<td>").text(sv.frequency);
+                //        var column4 = $("<td>").text(moment.unix(sv.nextArrival).format("hh:mm"));
+                //                    
+                var column4 = $("<td>").text(nextTrain);
+                var column5 = $("<td>").text(nextArrival);
 
-            //            var column5 = $("<td>").text(moment.unix(sv.minutesAway).format("hh:mm"));
+                //            var column5 = $("<td>").text(moment.unix(sv.minutesAway).format("hh:mm"));
 
-            tableRow.append(column1).append(column2).append(column3).append(column4).append(column5);
-
-
+                tableRow.append(column1).append(column2).append(column3).append(column4).append(column5);
 
 
-            $("#tableBody").append(tableRow);
+
+
+                $("#tableBody").append(tableRow);
+
+            })
 
             // Handle the errors
         },
