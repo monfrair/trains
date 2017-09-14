@@ -15,7 +15,7 @@ body {
 .card-header {
     font-family: 'Lato', sans-serif;
     background-color: dodgerblue;
-    color: black;
+    color: white;
     font-size: 22px;
 }
 .card-body {
@@ -28,3 +28,7 @@ button {
     color: white;
 }
 
+.card {
+    display: inline-block;
+    width: auto;
+}
