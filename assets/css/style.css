@@ -10,6 +10,9 @@ body {
     background-color: dodgerblue;
     color: white;
     font: lato;
+    border-style: solid;
+    border-color: black;
+    border-width: 10px;
     
 }
 .card-header {
@@ -21,6 +24,7 @@ body {
 .card-body {
     background-color: dodgerblue;
     color: white;
+    
 }
 
 button {
@@ -31,4 +35,7 @@ button {
 .card {
     display: inline-block;
     width: auto;
+    border-style: solid;
+    border-color: black;
+    border-width: 10px;
 }
