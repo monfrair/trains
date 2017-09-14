@@ -60,7 +60,9 @@ $(document).ready(function () {
     });
     
     // Update minutes away by triggering change in firebase children
+   
     function updateTime() {
+      
       database.ref().on("value", function(snapshot){
         snapshot.forEach(function(childSnapshot){
           fbTime = moment().format('X');
@@ -70,8 +72,8 @@ $(document).ready(function () {
         })    
       })
     };
-
-    setInterval(updateTime, 10000);
+     
+    setInterval(updateTime, 5000);
     
     
     database.ref().on("value", function (snapshot) {
@@ -79,7 +81,7 @@ $(document).ready(function () {
 
             
 
-            $("tablebody").empty();
+            $("#tablebody").empty();
 
 
             snapshot.forEach(function (childSnapshot) {
@@ -167,9 +169,9 @@ $(document).ready(function () {
 
 
 
-
+                
                 $("#tableBody").append(tableRow);
-
+                
             })
 
             // Handle the errors
