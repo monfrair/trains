@@ -112,8 +112,15 @@ $(document).ready(function () {
                 console.log("Minutes until next train: " + minutesAway);
 
                 //  calculate when the next train comes in minutes
+                
+//                if (minutesAway <= 60) {
                 nextArrival = moment().add(minutesAway, "minutes");
                 console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
+//                } else { 
+//                nextArrival = moment().Math.abs(minutesAway, "minutes")
+//                };
+//                
+                
                 
 
                 if (diffTime >= 0) {  // remainder is 7 for my example
