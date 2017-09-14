@@ -63,7 +63,7 @@ $(document).ready(function () {
    
     function updateTime() {
       
-      database.ref().on("value", function(snapshot){
+      database.ref().once("value", function(snapshot){
         snapshot.forEach(function(childSnapshot){
           fbTime = moment().format('X');
           database.ref(childSnapshot.key).update({
@@ -73,10 +73,11 @@ $(document).ready(function () {
       })
     };
      
-    setInterval(updateTime, 5000);
-    
-    
-    database.ref().on("value", function (snapshot) {
+    setInterval(updateTime, 10000);
+//     $("#tablebody").empty();
+//    function printToPage() {
+       
+    database.ref().on("child_added", function (childSnapshot) {
             // storing the snapshot.val() in a variable for convenience
 
             
@@ -84,7 +85,106 @@ $(document).ready(function () {
             $("#tablebody").empty();
 
 
-            snapshot.forEach(function (childSnapshot) {
+                var sv = childSnapshot.val();
+
+                var trainClass = sv.key;
+                
+
+
+                console.log(sv);
+                
+                console.log(sv.trainTime);
+                console.log(sv.frequency);
+
+
+                //convert first train time into UNIX time
+                var firstTimeConverted = moment.unix(sv.trainTime);
+                console.log("first time converted: " + firstTimeConverted);
+
+                //calculate the difference between the current time and the first train time
+                var diffTime = moment().diff(moment(firstTimeConverted, "hh:mm"), "minutes");
+                console.log(diffTime);
+
+                console.log(sv.frequency);
+                //Time apart get the remainder
+                var timeRemainder = diffTime % parseInt(sv.frequency);
+                console.log("Time Remainder: " + timeRemainder);
+                // Calcualte minutes until next train subtracting the frequency of the train by the remainder of diffTime % frequency
+                var minutesAway = sv.frequency - timeRemainder;
+                console.log("Minutes until next train: " + minutesAway);
+
+                //  calculate when the next train comes in minutes
+                
+//                if (minutesAway <= 60) {
+                nextArrival = moment().add(minutesAway, "minutes");
+                console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
+//                } else { 
+//                nextArrival = moment().Math.abs(minutesAway, "minutes")
+//                };
+//                
+                
+                
+
+                if (diffTime >= 0) {  // remainder is 7 for my example
+                    nextTrain = null;  //next train cleared out
+                    console.log(minutesAway); //NaN because of frequency?
+                    nextTrain = moment().add(minutesAway, "minutes").format("hh:mm A");
+                    console.log(nextTrain) + "next train";
+                } else {
+                    nextTrain = null;
+                    nextTrain = firstTimeConverted.format("hh:mm A");
+                    diffTime = Math.abs(diffTime - 1);
+                    console.log(nextTrain) + "next train";
+                };
+
+
+                // Console.loging the last user's data
+                console.log(sv.trainName) + "train name";
+                console.log(sv.destination) + "destination";
+                console.log(sv.trainTime) + "train time";
+                console.log(sv.frequency) + "frequency";
+                console.log(nextTrain) + "next train";
+                console.log(moment(nextArrival).format("hh:mm"));
+                //                console.log(moment(nextTrain).format("hh:mm"));
+                //                console.log(sv.minutesAway);
+
+
+                //send data out to the table
+                var tableRow = $("<tr>");
+                tableRow.addClass(childSnapshot.key);
+                var column1 = $("<td>").text(sv.trainName);
+                var column2 = $("<td>").text(sv.destination);
+                var column3 = $("<td>").text(sv.frequency);
+                //        var column4 = $("<td>").text(moment.unix(sv.nextArrival).format("hh:mm"));
+                //                    
+                //                var column4 = $("<td>").text(moment(nextTrain).format("hh:mm A"));
+                var column4 = $("<td>").text(nextTrain);
+                var column5 = $("<td>").text(minutesAway);
+
+                //            var column5 = $("<td>").text(moment.unix(sv.minutesAway).format("hh:mm"));
+
+                tableRow.append(column1).append(column2).append(column3).append(column4).append(column5);
+
+
+
+                
+                $("#tableBody").append(tableRow);
+                
+
+            // Handle the errors
+        },
+        function (errorObject) {
+            console.log("Errors handled: " + errorObject.code);
+        });
+
+    
+    database.ref().on("child_changed", function (childSnapshot) {
+            // storing the snapshot.val() in a variable for convenience
+
+            
+
+
+
                 var sv = childSnapshot.val();
 
                 var trainClass = sv.key;
@@ -154,6 +254,7 @@ $(document).ready(function () {
 
                 //send data out to the table
                 var tableRow = $("<tr>");
+                tableRow.addClass(childSnapshot.key);
                 var column1 = $("<td>").text(sv.trainName);
                 var column2 = $("<td>").text(sv.destination);
                 var column3 = $("<td>").text(sv.frequency);
@@ -165,14 +266,14 @@ $(document).ready(function () {
 
                 //            var column5 = $("<td>").text(moment.unix(sv.minutesAway).format("hh:mm"));
 
-                tableRow.append(column1).append(column2).append(column3).append(column4).append(column5);
+                $("." + childSnapshot.key).html("<td>" + sv.trainName + "</td><td>" + sv.destination + "</td><td>" + sv.frequency + "</td><td>" + nextTrain + "</td><td>" + minutesAway + "</td>");
 
 
 
                 
-                $("#tableBody").append(tableRow);
+//                $("#tableBody").append(tableRow);
                 
-            })
+            
 
             // Handle the errors
         },
@@ -180,6 +281,6 @@ $(document).ready(function () {
             console.log("Errors handled: " + errorObject.code);
         });
 
-
+   
 
 })
