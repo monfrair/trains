@@ -8,14 +8,15 @@ body {
 .jumbotron {
     margin-top: 20px;
     background-color: dodgerblue;
-    color: black;
+    color: white;
     font: lato;
     
 }
 .card-header {
+    font-family: 'Lato', sans-serif;
     background-color: dodgerblue;
     color: black;
-    font-size: 20px;
+    font-size: 22px;
 }
 .card-body {
     background-color: dodgerblue;
