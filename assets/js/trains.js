@@ -34,27 +34,11 @@ $(document).ready(function () {
 //        frequency = $("#frequency").val().trim();
         frequency = $("#frequency").val().trim();
         
-        
-        console.log(trainName);
-        console.log(destination);
-        console.log(trainTime);
-        console.log(frequency);
+    
 
 
-        //        //firstTime (pushed back 1 year to make sure it comes before current time)
-        //        firstTimeConverted = moment.unix(trainTime).subtract(1, "years");
-        //        console.log(firstTimeConverted);
-        //
-        //        //get the current time
-        //        currentTime = moment();
-        //        
         var unixTime = moment().format("X");
 
-        //        //calculate when the next train comes
-        //        nextArrival = moment().add(minutesAway, "minutes");
-        //        console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
-        //        
-        //        nextTrainCalculated = moment(nextArrival).format("hh:mm");
 
 
         //push the data into the DB
@@ -168,7 +152,7 @@ $(document).ready(function () {
                 //                    
                 //                var column4 = $("<td>").text(moment(nextTrain).format("hh:mm A"));
                 var column4 = $("<td>").text(nextTrain);
-                var column5 = $("<td>").text(minutesAway, ("hh:mm"));
+                var column5 = $("<td>").text(minutesAway);
 
                 //            var column5 = $("<td>").text(moment.unix(sv.minutesAway).format("hh:mm"));
 
