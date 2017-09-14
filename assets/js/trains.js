@@ -32,7 +32,7 @@ $(document).ready(function () {
         destination = $("#destination").val().trim();
         trainTime = moment($("#trainTime").val().trim(), "HH:mm").format("X");
 //        frequency = $("#frequency").val().trim();
-        frequency = $("#frequency").num().trim();
+        frequency = $("#frequency").val().trim();
         
         
         console.log(trainName);
@@ -74,20 +74,29 @@ $(document).ready(function () {
         console.log(frequency);
 
     });
+    
+    // Update minutes away by triggering change in firebase children
+    function updateTime() {
+      database.ref().on("value", function(snapshot){
+        snapshot.forEach(function(childSnapshot){
+          fbTime = moment().format('X');
+          database.ref(childSnapshot.key).update({
+          currentTime: fbTime,
+          })
+        })    
+      })
+    };
+
+    setInterval(updateTime, 10000);
+    
+    
     database.ref().on("value", function (snapshot) {
             // storing the snapshot.val() in a variable for convenience
 
-            console.log(trainName);
-            console.log(destination);
-            console.log(trainTime);
-            console.log(frequency);
+            
 
             $("tablebody").empty();
 
-            console.log(trainName);
-            console.log(destination);
-            console.log(trainTime);
-            console.log(frequency);
 
             snapshot.forEach(function (childSnapshot) {
                 var sv = childSnapshot.val();
@@ -97,7 +106,7 @@ $(document).ready(function () {
 
 
                 console.log(sv);
-                console.log(trainClass);
+                
                 console.log(sv.trainTime);
                 console.log(sv.frequency);
 
@@ -107,23 +116,21 @@ $(document).ready(function () {
                 console.log("first time converted: " + firstTimeConverted);
 
                 //calculate the difference between the current time and the first train time
-                var diffTime = moment().diff(moment(firstTimeConverted, "minutes"), "minutes");
+                var diffTime = moment().diff(moment(firstTimeConverted, "hh:mm"), "minutes");
                 console.log(diffTime);
 
-                //*** problem seems to be frequency has no value, it is a string and needs to be changed into a number or the value of it is not being drawn out of the DB.  When I divide difftime by frequency I get NaN because of frequency. ***
-                //                ask why lines 117, 121, do not get consoled?  find the value for frequency and then try and divide it below.
-
-                console.log(frequency);
+                console.log(sv.frequency);
                 //Time apart get the remainder
-                var timeRemainder = (diffTime % frequency);
+                var timeRemainder = diffTime % parseInt(sv.frequency);
                 console.log("Time Remainder: " + timeRemainder);
                 // Calcualte minutes until next train subtracting the frequency of the train by the remainder of diffTime % frequency
-                var minutesAway = frequency - timeRemainder;
+                var minutesAway = sv.frequency - timeRemainder;
                 console.log("Minutes until next train: " + minutesAway);
 
-                //                calculate when the next train comes in minutes
+                //  calculate when the next train comes in minutes
                 nextArrival = moment().add(minutesAway, "minutes");
                 console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
+                
 
                 if (diffTime >= 0) {  // remainder is 7 for my example
                     nextTrain = null;  //next train cleared out
@@ -161,7 +168,7 @@ $(document).ready(function () {
                 //                    
                 //                var column4 = $("<td>").text(moment(nextTrain).format("hh:mm A"));
                 var column4 = $("<td>").text(nextTrain);
-                var column5 = $("<td>").text(diffTime);
+                var column5 = $("<td>").text(minutesAway, ("hh:mm"));
 
                 //            var column5 = $("<td>").text(moment.unix(sv.minutesAway).format("hh:mm"));
 
