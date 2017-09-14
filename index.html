@@ -1,102 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <title>Catch that Train</title>
+
 </head>
 
-<body>
-
-    <div class="jumbotron text-center">
-        <h1 class="display-3">Train Scheduler</h1>
-        <p class="lead">Add your train to the scheduler</p>
-        <hr class="my-4">
-
-
-    </div>
-
+<body background="assets/img/brickwall.png">
 
     <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Current Train Schedule
+        <div class="jumbotron text-center">
+
+            <h1 class="display-3">Train Scheduler</h1>
+            <p class="lead">Add your train to the scheduler</p>
+
+
+
+        </div>
+
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            Add A Train
+
+                        </div>
+
+                        <div class="card-body text-center">
+                            <form>
+                                <div class="form-group">
+                                    <label for="trainName">Train Name</label>
+                                    <input type="text" class="form-control" id="trainName" aria-describedby="emailHelp" placeholder="Name">
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="role">Destination</label>
+                                    <input type="text" class="form-control" id="destination" aria-describedby="emailHelp" placeholder="Destination">
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="trainTime">Train Time:</label>
+                                    <input type="text" class="form-control" id="trainTime" aria-describedby="emailHelp" placeholder="Military Time only">
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="frequency">Frequency</label>
+                                    <input type="number" class="form-control" id="frequency" aria-describedby="emailHelp" placeholder="Frequency">
+
+                                </div>
+
+
+                                <button type="submit" class="btn " id="addTrain">Add Train</button>
+                            </form>
+
+                        </div>
+
                     </div>
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <td>Train Name</td>
-                                    <td>Destination</td>
-                                    <td>Frequency (min)</td>
-                                    <td>Next Arrival</td>
-                                    <td>Minutes Away</td>
-                                </tr>
-
-                            </thead>
-                            <tbody id="tableBody"></tbody>
-
-                        </table>
-                    </div>
-
                 </div>
+
+
+                <div class="col-sm-9">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            Current Train Schedule
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td>Train Name</td>
+                                        <td>Destination</td>
+                                        <td>Frequency (min)</td>
+                                        <td>Next Arrival</td>
+                                        <td>Minutes Away</td>
+                                    </tr>
+
+                                </thead>
+                                <tbody id="tableBody"></tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>
 
-    </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Add Train
-
-                    </div>
-
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="trainName">Train Name</label>
-                                <input type="text" class="form-control" id="trainName" aria-describedby="emailHelp" placeholder="Enter Train Name">
-
-                            </div>
-
-                            <div class="form-group">
-                                <label for="role">Destination</label>
-                                <input type="text" class="form-control" id="destination" aria-describedby="emailHelp" placeholder="Enter Destination">
-
-                            </div>
-                            <div class="form-group">
-                                <label for="trainTime">First Train Time (HH:mm military time):</label>
-                                <input type="text" class="form-control" id="trainTime" aria-describedby="emailHelp" placeholder="Enter Military Time">
-
-                            </div>
-
-                            <div class="form-group">
-                                <label for="monthlyRate">Frequency</label>
-                                <input type="number" class="form-control" id="frequency" aria-describedby="emailHelp" placeholder="Enter Frequency">
-
-                            </div>
 
 
-                            <button type="submit" class="btn btn-primary" id="addTrain">Add Train</button>
-                        </form>
-
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
 
     </div>
+
+
+
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
@@ -104,7 +114,7 @@
     <script src="assets/js/trains.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
